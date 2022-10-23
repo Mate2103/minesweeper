@@ -1,0 +1,37 @@
+*{
+    margin:0;
+    padding:0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.title{
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+    text-align: center;
+}
+.newgame{
+    padding: 5px 10px 5px 10px;
+    font-size: 1em;
+    margin: 0 auto;
+    display: block;
+    margin-top: 2vh;
+}
+.options{
+    display: flex;
+    justify-content: center;
+}
+#difficulty{
+    margin-left: 10px;
+}
+.map-container{
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(9, 3vw);
+    grid-template-rows: repeat(9, 3vw);
+    margin-top: 5vh;
+}
+.map-element{
+    border: 1px solid black;
+}
+.bomb{
+    background-color: black;
+}
