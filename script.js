@@ -5,8 +5,20 @@ let bombs = [];
 let tiles = [];
 let random = 0;
 let random2 = 0;
+let died = false;
+let colors = {
+    1: 'blue',
+    2: 'green',
+    3: 'red',
+    4: 'dark-blue',
+    5: 'dark-red',
+    6: 'cyan',
+    7: 'black',
+    8: 'gray'
+};
 
 function generateMap(e) {
+    died = false;
     bombs = [];
     tiles = [];
     while (map_container.firstChild) {
@@ -37,36 +49,64 @@ function generateMap(e) {
             tiles[i][j] = element;
         }
     }
-    console.log(tiles);
     //kill me
     let bombcount = 0;
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
+            //optimalizálási ötlet: dupla for looppal helyettesíteni a sok if-et
             bombcount = 0;
-            if (i - 1 < 0) continue;
-            if (j - 1 < 0) continue;
-            if (i + 1 > 8) continue;
-            if (j + 1 > 8) continue;
-            if (!(i - 1 < 0 && j - 1 < 0)) if (tiles[i - 1][j - 1].classList.contains('bomb')) bombcount++;
+            if (!(i - 1 < 0) && !(j - 1 < 0)) if (tiles[i - 1][j - 1].classList.contains('bomb')) bombcount++;
+            if (!(i - 1 < 0) && !(j + 1 > 8)) if (tiles[i - 1][j + 1].classList.contains('bomb')) bombcount++;
+            if (!(i + 1 > 8) && !(j - 1 < 0)) if (tiles[i + 1][j - 1].classList.contains('bomb')) bombcount++;
+            if (!(i + 1 > 8) && !(j + 1 > 8)) if (tiles[i + 1][j + 1].classList.contains('bomb')) bombcount++;
+
             if (!(j + 1 > 8)) if (tiles[i][j + 1].classList.contains('bomb')) bombcount++;
-            if (!(i + 1 > 8 && j + 1 > 8)) if (tiles[i + 1][j + 1].classList.contains('bomb')) bombcount++;
-            if (!(i - 1<0 && j + 1 > 8)) if (tiles[i - 1][j + 1].classList.contains('bomb')) bombcount++;
-            if (!(i + 1 > 8 && j-1<0)) if (tiles[i + 1][j - 1].classList.contains('bomb')) bombcount++;
+            if (!(j - 1 < 0)) if (tiles[i][j - 1].classList.contains('bomb')) bombcount++;
+            if (!(i + 1 > 8)) if (tiles[i + 1][j].classList.contains('bomb')) bombcount++;
+            if (!(i - 1 < 0)) if (tiles[i - 1][j].classList.contains('bomb')) bombcount++;
 
-           if (!(i+1)) if (tiles[i + 1][j].classList.contains('bomb')) bombcount++;
-            if (tiles[i - 1][j].classList.contains('bomb')) bombcount++;
-
-            if (bombcount > 0 && !(tiles[i][j].classList.contains('bomb'))) tiles[i][j].innerHTML = bombcount;
+            if (bombcount > 0 && !(tiles[i][j].classList.contains('bomb'))) {
+                tiles[i][j].innerHTML = bombcount;
+                tiles[i][j].classList.add(colors[bombcount]);
+            }
         }
     }
 
 }
 
-function tileClick(e) { e.target.classList.add('taken'); }
+function tileClick(e) {
+    if (died) return;
+    if (e.target.classList.contains('taken')) return;
+    e.target.classList.add('taken');
+    if (e.target.classList.contains('bomb')) {
+        e.target.classList.add('taken');
+        died = true;
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (tiles[i][j].classList.contains('bomb')) tiles[i][j].classList.add('taken');
+            }
+        }
+    }
+    if (e.target.innerHTML.length == 0) {
+        let i = tiles.findIndex(arr => arr.includes(e.target));
+        let j = tiles[i].indexOf(e.target);
+        revealEmpty(i, j);
+    }
+}
 
-function main() {
+function revealEmpty(i, j) {
+    tiles[i][j].classList.add('taken');
+    //ide is jöhetne valami jobb, de ez van
+    if (!(i - 1 < 0) && !(j - 1 < 0)) if (tiles[i - 1][j - 1].innerHTML == "") revealEmpty(i-1, j-1);
+    if (!(i - 1 < 0) && !(j + 1 > 8)) if (tiles[i - 1][j + 1].innerHTML=="") revealEmpty(i-1, j+1);
+    if (!(i + 1 > 8) && !(j - 1 < 0)) if (tiles[i + 1][j - 1].innerHTML=="") revealEmpty(i+1, j-1);
+    if (!(i + 1 > 8) && !(j + 1 > 8)) if (tiles[i + 1][j + 1].innerHTML == "") revealEmpty(i+1, j+1);
 
+    if (!(j + 1 > 8)) if (tiles[i][j + 1].innerHTML=="") revealEmpty(i, j+1);
+    if (!(j - 1 < 0)) if (tiles[i][j - 1].innerHTML=="") revealEmpty(i, j-1);
+    if (!(i + 1 > 8)) if (tiles[i + 1][j].innerHTML=="") revealEmpty(i+1, j);
+    if (!(i - 1 < 0)) if (tiles[i - 1][j].innerHTML =="") revealEmpty(i-1, j);
 }
 
 newgame.addEventListener('click', generateMap);
-main();
+generateMap();
