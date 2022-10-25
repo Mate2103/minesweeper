@@ -9,22 +9,40 @@
     padding-bottom: 5vh;
     text-align: center;
 }
-
-.newgame {
-    padding: 5px 10px 5px 10px;
+.win{
+    text-align: center;
+    padding-top: 1vh;
     font-size: 1em;
-    margin: 0 auto;
-    display: block;
+}
+
+.gamebutton {
+    padding: 7px 15px 7px 15px;
+    font-size: 1em;
     margin-top: 2vh;
+    max-height: 80px;
+    transition: background-color 0.2s ease-out;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 2px 5px 10px rgb(220, 220, 220);
+}
+.gamebutton:hover{
+    background-color: rgb(210, 210, 210);
 }
 
 .options {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 #difficulty {
     margin-left: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 2px 5px 10px rgb(220, 220, 220);
+    padding: 5px 10px 5px 10px;
 }
 
 .map-container {
@@ -53,13 +71,51 @@
     z-index: 10;
     left: 0;
 }
-
+.bomb-image{
+    height: 70%;
+    width: 70%;
+}
+.bomb{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.button-holder{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.icon{
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+#target{
+    background-image: url("./imgs/target.png");
+}
+#flag{
+    background-image: url("./imgs/flag.png");
+}
+.flagged::after{
+    background-image: url("./imgs/flag.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+}
+.selected-button{
+    background-color: rgb(210, 210, 210);
+}
+.remained{
+    padding-top: 1vh;
+    text-align: center;
+}
 .taken::after {
     content: none;
-}
-
-.bomb {
-    /* background-color: black; */
 }
 
 .blue {
@@ -85,4 +141,16 @@
 }
 .gray {
     color: gray;
+}
+@media (min-width: 320px) and (max-width: 999px){
+    .map-container {
+        grid-template-columns: repeat(9, 10vw);
+        grid-template-rows: repeat(9, 10vw);
+    }
+    .map-element {
+        line-height: 10vw;
+    }
+    body{
+        overflow-y: hidden;
+    }
 }
