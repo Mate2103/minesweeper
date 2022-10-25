@@ -41,6 +41,7 @@
     line-height: 3vw;
     font-size: 1.5em;
     position: relative;
+    user-select: none;
 }
 
 .map-element::after {
